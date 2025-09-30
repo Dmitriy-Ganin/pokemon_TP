@@ -5,7 +5,6 @@ import type { RootState } from '../store/store';
 import { refreshTokens } from '../utils/refreshTokens';
 import { removeAuthCookies } from '../utils/cookes';
 import { clearToken, setAuthError  } from '../store/slices/tokenSlice';
-import { ROUTES } from '../constants/routes';
 
 interface AuthHandlerProps {
   children: React.ReactNode;
@@ -18,7 +17,7 @@ export const AuthHandler = ({ children }: AuthHandlerProps) => {
 
   useEffect(() => {
     if (authError) {
-      navigate(ROUTES.LOGIN);
+      navigate(import.meta.env.VITE_LOGIN);
       dispatch(setAuthError(false));
     }
   }, [authError, navigate, dispatch]);

@@ -1,11 +1,10 @@
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { getCookie, removeAuthCookies } from '../utils/cookes';
 import { clearToken, setAuthError  } from '../store/slices/tokenSlice';
-import { APIURL } from '../constants/apiURL';
 import { refreshTokens } from '../utils/refreshTokens';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: APIURL.POKEMON_URL,
+  baseUrl: import.meta.env.VITE_POKEMON_URL,
   credentials: 'include',
   prepareHeaders: (headers) => {
     const token = getCookie('access_token');

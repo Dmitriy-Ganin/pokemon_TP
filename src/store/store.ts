@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import loginReducer from './slices/loginSlice';
 import tokenReducer from './slices/tokenSlice';
+import moneyReducer from './slices/moneySlice';
 
 import { authAPI } from '../API/authAPI';
 import { baseAPI } from '../API/baseAPI';
@@ -10,6 +11,8 @@ export const store = configureStore({
   reducer: {
     login: loginReducer,
     token: tokenReducer,
+    money: moneyReducer,
+    
     [baseAPI.reducerPath]: baseAPI.reducer,
     [authAPI.reducerPath]: authAPI.reducer,
   },

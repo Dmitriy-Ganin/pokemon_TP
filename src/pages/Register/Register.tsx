@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
-import { ROUTES } from '../../constants/routes';
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from 'react-redux';
@@ -62,7 +61,7 @@ export const Register = () => {
       setCookie('access_token', response.access_token, 3600);
 
       dispatch(setToken(response.access_token));
-      navigate(ROUTES.HOME);
+      navigate(import.meta.env.VITE_HOME);
     } catch (err) {
       console.error('Registration error:', err);
     }
@@ -73,7 +72,7 @@ export const Register = () => {
     if (currentLogin.trim()) {
       dispatch(setLogin(currentLogin));
     }
-    navigate(ROUTES.LOGIN);
+    navigate(import.meta.env.VITE_LOGIN);
   };
 
   return (
@@ -83,7 +82,7 @@ export const Register = () => {
           <Tabs>
             <Tab onClick={handleSignInClick}>Sign in</Tab>
             <Tab></Tab>
-            <Tab as={Link} to={ROUTES.REGISTER} $active={true}>
+            <Tab as={Link} to={import.meta.env.VITE_REGISTER} $active={true}>
               Sign up
             </Tab>
           </Tabs>

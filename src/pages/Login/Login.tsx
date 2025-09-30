@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
-import { ROUTES } from '../../constants/routes';
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from 'react-redux';
@@ -56,12 +55,15 @@ export const Login = () => {
 
       setCookie('access_token', response.access_token, 3600);
 
-      dispatch(setLogin(data.login));
       dispatch(setToken(response.access_token));
 
-      navigate(ROUTES.HOME);
+      navigate(import.meta.env.VITE_HOME);
     } catch (err: any) {
       console.error('Login error:', err);
+      if (err.status === 500) {
+        console.error('Server error 500');
+        await onSubmit(data);
+      }
     }
   };
 
@@ -70,14 +72,14 @@ export const Login = () => {
     if (currentLogin.trim()) {
       dispatch(setLogin(currentLogin));
     }
-    navigate(ROUTES.REGISTER);
+    navigate(import.meta.env.VITE_REGISTER);
   };
 
   return (
     <LoginWrapper>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Tabs>
-          <Tab as={Link} to={ROUTES.LOGIN} $active={true}>
+          <Tab as={Link} to={import.meta.env.VITE_LOGIN} $active={true}>
             Sign in
           </Tab>
           <Tab></Tab>

@@ -3,29 +3,28 @@ import { Home } from '../pages/Home'
 import { Login } from '../pages/Login'
 import { Register } from '../pages/Register'
 import { AuthForm } from '../pages/AuthForm'
-import { ROUTES } from '../constants/routes'
 
 export const router = createBrowserRouter([
   {
-    path: ROUTES.HOME,
+    path: import.meta.env.VITE_HOME,
     element: <Home />,
   },
   {
-    path: ROUTES.AUTH,
+    path: import.meta.env.VITE_AUTH,
     element: <AuthForm />,
     children: [
       {
-        path: ROUTES.LOGIN,
+        path: import.meta.env.VITE_LOGIN,
         element: <Login />,
       },
       {
-        path: ROUTES.REGISTER,
+        path: import.meta.env.VITE_REGISTER,
         element: <Register />,
       },
     ],
   },
   {
     path: '*',
-    element: <Navigate to={ROUTES.HOME} />,
+    element: <Navigate to={import.meta.env.VITE_HOME} />,
   },
 ]);
