@@ -14,10 +14,13 @@ const loginSlice = createSlice({
   initialState: initialLoginState,
   reducers: {
     setLogin(state, action: PayloadAction<string>) {
-      state.login = action.payload
+      state.login = action.payload;
+    },
+    clearLogin(state) {
+      state.login = '';
     }
   }
 })
 
-export const { setLogin } = loginSlice.actions;
+export const { clearLogin, setLogin } = loginSlice.actions;
 export default loginSlice.reducer;

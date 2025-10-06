@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router';
 import { removeAuthCookies } from '../../utils/cookes';
 import { clearToken } from '../../store/slices/tokenSlice';
+import { clearLogin } from '../../store/slices/loginSlice';
 
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../../store/store';
@@ -17,6 +18,7 @@ export const Wallet = () => {
   const LogOut = () => {
     removeAuthCookies();
     dispatch(clearToken());
+    dispatch(clearLogin());
     navigate(import.meta.env.VITE_LOGIN);
   };
 

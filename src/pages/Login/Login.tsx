@@ -56,6 +56,7 @@ export const Login = () => {
       setCookie('access_token', response.access_token, 3600);
 
       dispatch(setToken(response.access_token));
+      dispatch(setLogin(data.login));
 
       navigate(import.meta.env.VITE_HOME);
     } catch (err: any) {
