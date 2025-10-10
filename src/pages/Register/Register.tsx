@@ -8,6 +8,7 @@ import { setLogin } from '../../store/slices/loginSlice';
 import { useRegisterMutation } from '../../API/authAPI';
 import { setCookie } from '../../utils/cookes';
 import { setToken } from '../../store/slices/tokenSlice';
+import { setFirstEntry  } from '../../store/slices/firstEntrySlice';
 
 import {
   RegisterWrapper,
@@ -62,6 +63,7 @@ export const Register = () => {
 
       dispatch(setToken(response.access_token));
       dispatch(setLogin(data.login));
+      dispatch(setFirstEntry(true));
 
       navigate(import.meta.env.VITE_HOME);
     } catch (err) {

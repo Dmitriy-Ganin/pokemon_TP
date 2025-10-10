@@ -5,7 +5,6 @@ import { refreshTokens } from '../utils/refreshTokens';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_POKEMON_URL,
-  credentials: 'include',
   prepareHeaders: (headers) => {
     const token = getCookie('access_token');
     if (token) {

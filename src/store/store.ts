@@ -2,6 +2,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import loginReducer from './slices/loginSlice';
 import tokenReducer from './slices/tokenSlice';
 import moneyReducer from './slices/moneySlice';
+import firstEntryReducer from './slices/firstEntrySlice';
+import pokemonReducer from './slices/pokemonSlice';
 
 import { authAPI } from '../API/authAPI';
 import { baseAPI } from '../API/baseAPI';
@@ -18,6 +20,7 @@ const loadState = (username?: string) => {
   return {
     login: parsedState.login,
     money: parsedState.money,
+    pokemon: parsedState.pokemon,
   };
 }
 
@@ -26,6 +29,7 @@ export const saveState = (state: RootState, username?: string) => {
   const stateToSave = {
     login: state.login,
     money: state.money,
+    pokemon: state.pokemon,
   };
 
   const serializedState = JSON.stringify(stateToSave);
@@ -41,6 +45,8 @@ export const store = configureStore({
     login: loginReducer,
     token: tokenReducer,
     money: moneyReducer,
+    firstEntry: firstEntryReducer,
+    pokemon: pokemonReducer,
 
     [baseAPI.reducerPath]: baseAPI.reducer,
     [authAPI.reducerPath]: authAPI.reducer,
