@@ -8,9 +8,9 @@ import { addPokemon } from '../../store/slices/pokemonSlice';
 
 export const PokemonComponent: React.FC = () => {
   const dispatch = useDispatch();
-  // const isFirstEntry = useSelector((state: RootState) => state.firstEntry.isFirstEntry);
+  // const isFirstEntry = useSelector((state: RootState) => state.firstEntry);
   const [isFirstEntry, setisFirstEntry] = useState<boolean>(true);
-  const pokemons = useSelector((state: RootState) => state.pokemon.pokemons);
+  const pokemons = useSelector((state: RootState) => state.pokemon);
   const [currentId, setCurrentId] = useState<number | null>(null);
 
   const {

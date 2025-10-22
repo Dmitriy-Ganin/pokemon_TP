@@ -1,22 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface LoginState {
-  login: string;
-}
 
-const initialLoginState: LoginState = {
-  login: '',
-}
+const initialLoginState: string = ''
 
 const loginSlice = createSlice({
   name: 'login',
   initialState: initialLoginState,
   reducers: {
-    setLogin(state, action: PayloadAction<string>) {
-      state.login = action.payload;
+    setLogin(_, action: PayloadAction<string>) {
+     return action.payload;
     },
-    clearLogin(state) {
-      state.login = '';
+    clearLogin() {
+      return '';
     }
   }
 })

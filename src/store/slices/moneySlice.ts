@@ -1,25 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface MoneyState {
-  money: number;
-}
-
-const initialMoneyState: MoneyState = {
-  money: 0,
-}
+const initialMoneyState: number = 0
 
 const moneySlice = createSlice({
   name: 'money',
   initialState: initialMoneyState,
   reducers: {
-    setMoney(state, action: PayloadAction<number>) {
-      state.money = action.payload
+    setMoney(_, action: PayloadAction<number>) {
+      return action.payload
     },
     incrementMoney(state, action: PayloadAction<number>) {
-      state.money += action.payload;
+      return state + action.payload;
     },
     decrementMoney(state, action: PayloadAction<number>) {
-      state.money -= action.payload;
+      return state - action.payload;
     }
   }
 })

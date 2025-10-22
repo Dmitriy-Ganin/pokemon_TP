@@ -8,7 +8,8 @@ import { setLogin } from '../../store/slices/loginSlice';
 import { useRegisterMutation } from '../../API/authAPI';
 import { setCookie } from '../../utils/cookes';
 import { setToken } from '../../store/slices/tokenSlice';
-import { setFirstEntry  } from '../../store/slices/firstEntrySlice';
+import { setFirstEntry } from '../../store/slices/firstEntrySlice';
+import { store, saveStateToStorage } from '../../store/store'; 
 
 import {
   RegisterWrapper,
@@ -39,7 +40,7 @@ export const Register = () => {
 
   type RegisterSchema = z.infer<typeof registerSchema>;
 
-  const savedLogin = useSelector((state: RootState) => state.login.login);
+  const savedLogin = useSelector((state: RootState) => state.login);
 
   const { register, handleSubmit, formState: { errors }, getValues } = useForm<RegisterSchema>({
     resolver: zodResolver(registerSchema),
@@ -64,6 +65,11 @@ export const Register = () => {
       dispatch(setToken(response.access_token));
       dispatch(setLogin(data.login));
       dispatch(setFirstEntry(true));
+
+      localStorage.setItem('activeLogin', data.login);
+
+      const state = store.getState();
+      saveStateToStorage(state);
 
       navigate(import.meta.env.VITE_HOME);
     } catch (err) {

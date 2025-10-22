@@ -36,8 +36,15 @@ export const saveState = (state: RootState, username?: string) => {
   localStorage.setItem(storageKey, serializedState);
 };
 
-const currentLogin = loadState()?.login?.login;
-const persistedState = loadState(currentLogin);
+export const saveStateToStorage = (state: RootState) => {
+  const username = state.login || localStorage.getItem('activeLogin');
+  if (username) {
+    saveState(state, username);
+  }
+};
+
+const activeLogin = localStorage.getItem('activeLogin');
+const persistedState = loadState(activeLogin || undefined);
 
 export const store = configureStore({
   preloadedState: persistedState,
@@ -56,11 +63,3 @@ export const store = configureStore({
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
-
-store.subscribe(() => {
-  const state = store.getState();
-  const username = state.login.login;
-  if (username) {
-    saveState(state, username);
-  }
-});

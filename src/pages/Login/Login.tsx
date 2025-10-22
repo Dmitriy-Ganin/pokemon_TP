@@ -8,6 +8,7 @@ import { setLogin } from '../../store/slices/loginSlice';
 import { useLoginMutation } from '../../API/authAPI';
 import { setCookie } from '../../utils/cookes';
 import { setToken } from '../../store/slices/tokenSlice';
+import { store, saveStateToStorage } from '../../store/store';
 
 import {
   LoginWrapper,
@@ -37,7 +38,7 @@ export const Login = () => {
 
   type LoginSchema = z.infer<typeof loginSchema>;
 
-  const savedLogin = useSelector((state: RootState) => state.login.login);
+  const savedLogin = useSelector((state: RootState) => state.login);
   const { register, handleSubmit, formState: { errors }, getValues } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -57,6 +58,11 @@ export const Login = () => {
 
       dispatch(setToken(response.access_token));
       dispatch(setLogin(data.login));
+
+      localStorage.setItem('activeLogin', data.login);
+
+      const state = store.getState();
+      saveStateToStorage(state);
 
       navigate(import.meta.env.VITE_HOME);
     } catch (err: any) {
