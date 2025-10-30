@@ -5,13 +5,16 @@ import type { RootState } from '../../store/store';
 // import { setFirstEntry } from '../../store/slices/firstEntrySlice';
 import { incrementMoney } from '../../store/slices/moneySlice';
 import { addPokemon } from '../../store/slices/pokemonSlice';
+import { SubMenuWrapper, SubMenuHeader } from '../Menu/MenuStyle';
+import { PokemonCard } from '../PokemonCard';
 
-export const PokemonComponent: React.FC = () => {
+export const Pokemons: React.FC = () => {
   const dispatch = useDispatch();
   // const isFirstEntry = useSelector((state: RootState) => state.firstEntry);
   const [isFirstEntry, setisFirstEntry] = useState<boolean>(true);
   const pokemons = useSelector((state: RootState) => state.pokemon);
   const [currentId, setCurrentId] = useState<number | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   const {
     data: pokemon,
@@ -52,34 +55,31 @@ export const PokemonComponent: React.FC = () => {
   if (error) return <div>Error loading pokemon</div>;
 
   return (
-    <div>
-      {isFirstEntry ? (
-        <button onClick={handleFirstEntryClick}>
-          Первый вход
-        </button>
-      ) : (
-        <button onClick={handleFirstEntryClick}>
-          Получить покемона
-        </button>
-      )}
+    <SubMenuWrapper>
+      <SubMenuHeader onClick={() => setIsOpen(!isOpen)}>
+        Pokemons
+      </SubMenuHeader>
+      {isOpen && (
+        <>
+          {isFirstEntry ? (
+            <button onClick={handleFirstEntryClick}>
+              Первый вход
+            </button>
+          ) : (
+            <button onClick={handleFirstEntryClick}>
+              Получить покемона
+            </button>
+          )}
 
-      {pokemons.length > 0 && (
-        <div>
-          {pokemons.map((p, index) => (
-            <div key={`${p.name}-${index}`}>
-              <h2>{p.name}</h2>
-              <img
-                src={p.sprites.front_default}
-                alt={p.name}
-              />
-              <div>
-                <h3>Money:</h3>
-                <span>{Math.round(p.order * 0.1)}</span>
-              </div>
+          {pokemons.length > 0 && (
+            <div>
+              {pokemons.map((pokemon, index) => (
+                <PokemonCard key={`${pokemon.name}-${index}`} pokemon={pokemon} />
+              ))}
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
-    </div>
+    </SubMenuWrapper>
   );
 };

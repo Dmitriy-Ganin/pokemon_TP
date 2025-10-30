@@ -1,9 +1,3 @@
-import { useNavigate } from 'react-router';
-import { saveStateToStorage, store } from '../../store/store';
-import { removeAuthCookies } from '../../utils/cookes';
-import { clearToken } from '../../store/slices/tokenSlice';
-import { clearLogin } from '../../store/slices/loginSlice';
-
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../../store/store';
 import moneyLogo from "./moneyLogo.png"
@@ -12,25 +6,8 @@ import { incrementMoney, decrementMoney } from '../../store/slices/moneySlice';
 
 export const Wallet = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const money = useSelector((state: RootState) => state.money);
-
-  const LogOut = () => {
-    const state = store.getState();
-    if (state.login) {
-      saveStateToStorage(state);
-    }
-
-    saveStateToStorage(state);
-    removeAuthCookies();
-    dispatch(clearToken());
-    dispatch(clearLogin());
-
-    localStorage.removeItem('activeLogin');
-
-    navigate(import.meta.env.VITE_LOGIN);
-  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', marginRight: '16px' }}>
@@ -64,9 +41,6 @@ export const Wallet = () => {
           -
         </button>
       </div>
-      <button onClick={LogOut}>
-        Log out
-      </button>
     </div>
   );
 };

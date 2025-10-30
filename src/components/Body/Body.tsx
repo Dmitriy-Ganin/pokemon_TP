@@ -1,11 +1,15 @@
+import { Inventory } from '../Inventory';
+import { Menu } from '../Menu';
+import { Shop } from '../Shop';
 import { BodyWrapper } from './BodyStyle';
-import { PokemonComponent } from '../../components/PokemonComponent';
 
 export const Body = () => {
 
   return (
     <BodyWrapper>
-      <PokemonComponent />
+      <Inventory />
+      <Menu/>
+      <Shop />
     </BodyWrapper>
   );
 };

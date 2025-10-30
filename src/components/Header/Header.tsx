@@ -5,6 +5,7 @@ import Clicker from "../../pages/AuthForm/AuthLogo/Clicker.png"
 import Pokemon from "../../pages/AuthForm/AuthLogo/Pokemon.png"
 import { Divider, LogoWrapper } from "../../pages/AuthForm/"
 import { Wallet } from "../../components/Wallet"
+import { LogOut } from "../../components/LogOut"
 
 export const Header = () => {
 
@@ -22,6 +23,7 @@ export const Header = () => {
           height="54px" />
       </LogoWrapper>
       <Wallet />
+      <LogOut />
     </HeaderWrapper>
 
   );

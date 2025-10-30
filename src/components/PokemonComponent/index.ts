@@ -1,1 +1,0 @@
-export { PokemonComponent } from './PokemonComponent'
