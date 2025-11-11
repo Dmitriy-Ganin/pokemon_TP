@@ -4,36 +4,61 @@ import tokenReducer from './slices/tokenSlice';
 import moneyReducer from './slices/moneySlice';
 import firstEntryReducer from './slices/firstEntrySlice';
 import pokemonReducer from './slices/pokemonSlice';
+import { PokemonState } from '../API/baseAPI'
 
 import { authAPI } from '../API/authAPI';
 import { baseAPI } from '../API/baseAPI';
 
-const getStorageKey = (username?: string) => username ? username : 'pokemonState';
+const ACCOUNTS_KEY = 'accounts';
 
-const loadState = (username?: string) => {
-  const storageKey = getStorageKey(username);
-  const originalState = localStorage.getItem(storageKey);
-  if (originalState === null) {
-    return undefined;
-  }
-  const parsedState = JSON.parse(originalState);
-  return {
-    login: parsedState.login,
-    money: parsedState.money,
-    pokemon: parsedState.pokemon,
+interface UserData {
+  login: string;
+  money: number;
+  pokemon: PokemonState [];
+}
+
+interface AccountsState {
+  accounts: {
+    [login: string]: UserData;
   };
 }
 
+const loadState = (username?: string) => {
+  const allAccountsJSON = localStorage.getItem(ACCOUNTS_KEY);
+  if (!allAccountsJSON) {
+    return undefined;
+  }
+  const allAccounts: AccountsState = JSON.parse(allAccountsJSON);
+  if (username && allAccounts.accounts[username]) {
+    return allAccounts.accounts[username];
+  }
+  else return undefined;
+}
+
 export const saveState = (state: RootState, username?: string) => {
-  const storageKey = getStorageKey(username);
-  const stateToSave = {
+  if (!username) return;
+  const allAccountsJSON = localStorage.getItem(ACCOUNTS_KEY);
+  let existingAccounts = { accounts: {} };
+
+  if (allAccountsJSON) {
+    existingAccounts = JSON.parse(allAccountsJSON);
+  }
+
+  const stateToSave: UserData = {
     login: state.login,
     money: state.money,
     pokemon: state.pokemon,
   };
 
-  const serializedState = JSON.stringify(stateToSave);
-  localStorage.setItem(storageKey, serializedState);
+  const newAccountsState: AccountsState = {
+    accounts: {
+      ...existingAccounts.accounts,
+      [username]: stateToSave 
+    }
+  }
+  const serializedState = JSON.stringify(newAccountsState);
+  localStorage.setItem(ACCOUNTS_KEY, serializedState);
+
 };
 
 export const saveStateToStorage = (state: RootState) => {

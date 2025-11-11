@@ -62,8 +62,8 @@ export const Login = () => {
 
       localStorage.setItem('activeLogin', data.login);
 
-      const state = store.getState();
-      saveStateToStorage(state);
+       const state = store.getState();
+       saveStateToStorage(state);
 
       navigate(import.meta.env.VITE_HOME);
     } catch (err: any) {

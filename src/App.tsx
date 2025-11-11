@@ -6,6 +6,7 @@ export const App = () => {
   window.addEventListener('beforeunload', () => {
     const state = store.getState();
     if (state.login) {
+      console.log(state.login);
       saveStateToStorage(state);
     }
   });

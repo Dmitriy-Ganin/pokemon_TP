@@ -9,8 +9,11 @@ const firstEntrySlise = createSlice({
     setFirstEntry(_, action: PayloadAction<boolean>) {
       return action.payload;
     },
+    clearFirstEntry() {
+      return initialFirstEntryState;
+    },
   }
 })
 
-export const { setFirstEntry } = firstEntrySlise.actions;
+export const { setFirstEntry, clearFirstEntry } = firstEntrySlise.actions;
 export default firstEntrySlise.reducer;

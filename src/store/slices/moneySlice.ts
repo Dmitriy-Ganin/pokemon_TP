@@ -14,9 +14,12 @@ const moneySlice = createSlice({
     },
     decrementMoney(state, action: PayloadAction<number>) {
       return state - action.payload;
-    }
+    },
+    clearMoney() {
+      return initialMoneyState;
+    },
   }
 })
 
-export const { setMoney, incrementMoney, decrementMoney } = moneySlice.actions;
+export const { setMoney, incrementMoney, decrementMoney, clearMoney } = moneySlice.actions;
 export default moneySlice.reducer;

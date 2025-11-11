@@ -13,8 +13,11 @@ const pokemonSlise = createSlice({
     removePokemon(state, action: PayloadAction<string>) {
       return state.filter(pokemon => pokemon.name !== action.payload);
     },
+    clearPokemon() {
+      return initialPokemonState;
+    },
   }
 })
 
-export const { addPokemon, removePokemon } = pokemonSlise.actions;
+export const { addPokemon, removePokemon, clearPokemon } = pokemonSlise.actions;
 export default pokemonSlise.reducer;
