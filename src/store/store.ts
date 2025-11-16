@@ -23,7 +23,7 @@ interface AccountsState {
   };
 }
 
-const loadState = (username?: string) => {
+export const loadState = (username?: string) => {
   const allAccountsJSON = localStorage.getItem(ACCOUNTS_KEY);
   if (!allAccountsJSON) {
     return undefined;

@@ -16,8 +16,11 @@ const pokemonSlise = createSlice({
     clearPokemon() {
       return initialPokemonState;
     },
+    setPokemon(_, action: PayloadAction<PokemonState[]>) {
+      return action.payload;
+    },
   }
 })
 
-export const { addPokemon, removePokemon, clearPokemon } = pokemonSlise.actions;
+export const { addPokemon, removePokemon, clearPokemon, setPokemon } = pokemonSlise.actions;
 export default pokemonSlise.reducer;

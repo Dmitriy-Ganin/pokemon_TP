@@ -5,10 +5,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../../store/store';
 import { setLogin } from '../../store/slices/loginSlice';
+import { setMoney } from '../../store/slices/moneySlice';
+import { setPokemon } from '../../store/slices/pokemonSlice';
 import { useLoginMutation } from '../../API/authAPI';
 import { setCookie } from '../../utils/cookes';
 import { setToken } from '../../store/slices/tokenSlice';
-import { store, saveStateToStorage } from '../../store/store';
+import { store, loadState, saveStateToStorage } from '../../store/store';
 
 import {
   LoginWrapper,
@@ -27,7 +29,7 @@ interface LoginResponse {
 }
 
 export const Login = () => {
-  
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loginUser, { isLoading }] = useLoginMutation();
@@ -62,8 +64,19 @@ export const Login = () => {
 
       localStorage.setItem('activeLogin', data.login);
 
-       const state = store.getState();
-       saveStateToStorage(state);
+      const userState = loadState(data.login);
+
+      if (userState) {
+        if (userState.money) {
+          dispatch(setMoney(userState.money));
+        }
+        if (userState.pokemon) {
+          dispatch(setPokemon(userState.pokemon));
+        }
+      }
+
+      const state = store.getState();
+      saveStateToStorage(state);
 
       navigate(import.meta.env.VITE_HOME);
     } catch (err: any) {
