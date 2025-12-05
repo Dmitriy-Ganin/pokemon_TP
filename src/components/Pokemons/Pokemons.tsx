@@ -2,16 +2,17 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useGetRandomPokemonQuery } from '../../API/baseAPI';
 import type { RootState } from '../../store/store';
-// import { setFirstEntry } from '../../store/slices/firstEntrySlice';
+import { setFirstEntry } from '../../store/slices/firstEntrySlice';
 import { incrementMoney } from '../../store/slices/moneySlice';
 import { addPokemon } from '../../store/slices/pokemonSlice';
-import { SubMenuWrapper, SubMenuHeader } from '../Menu/MenuStyle';
+import { SubMenuWrapper } from '../Menu/MenuStyle';
 import { PokemonCard } from '../PokemonCard';
+import { SubMenuHeader } from '../SubMenuHeader'
 
 export const Pokemons: React.FC = () => {
   const dispatch = useDispatch();
-  // const isFirstEntry = useSelector((state: RootState) => state.firstEntry);
-  const [isFirstEntry, setisFirstEntry] = useState<boolean>(true);
+  const isFirstEntry = useSelector((state: RootState) => state.firstEntry);
+  //const [isFirstEntry, setisFirstEntry] = useState<boolean>(true);
   const pokemons = useSelector((state: RootState) => state.pokemon);
   const [currentId, setCurrentId] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -33,8 +34,8 @@ export const Pokemons: React.FC = () => {
     if (pokemon) {
       dispatch(addPokemon(pokemon));
       if (isFirstEntry) {
-        setisFirstEntry(false);
-        // dispatch(setFirstEntry(false));
+        //setisFirstEntry(false);
+        dispatch(setFirstEntry(false));
       }
     }
   }, [pokemon, dispatch]);
@@ -56,9 +57,11 @@ export const Pokemons: React.FC = () => {
 
   return (
     <SubMenuWrapper>
-      <SubMenuHeader onClick={() => setIsOpen(!isOpen)}>
-        Pokemons
-      </SubMenuHeader>
+      <SubMenuHeader 
+        title="Pokemons"
+        isOpen={isOpen}
+        onClick={() => setIsOpen(!isOpen)}
+      />
       {isOpen && (
         <>
           {isFirstEntry ? (
@@ -72,7 +75,7 @@ export const Pokemons: React.FC = () => {
           )}
 
           {pokemons.length > 0 && (
-            <div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
               {pokemons.map((pokemon, index) => (
                 <PokemonCard key={`${pokemon.name}-${index}`} pokemon={pokemon} />
               ))}

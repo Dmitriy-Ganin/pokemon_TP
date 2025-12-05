@@ -1,0 +1,1 @@
+export { ControlPokemonModalFooter } from './ControlPokemonModalFooter'

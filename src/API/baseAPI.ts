@@ -7,6 +7,7 @@ export interface PokemonState {
   sprites: {
     front_default: string;
   };
+  weight: number;
 }
 
 export const baseAPI = createApi({
@@ -24,6 +25,7 @@ export const baseAPI = createApi({
         sprites: {
           front_default: response.sprites.front_default,
         },
+        weight: response.weight,
       }),
     }),
   }),

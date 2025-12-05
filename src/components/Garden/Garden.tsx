@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { SubMenuContent } from './GardenStyle';
-import { SubMenuWrapper, SubMenuHeader } from '../Menu/MenuStyle';
+import { SubMenuWrapper } from '../Menu/MenuStyle';
+import { SubMenuHeader } from '../SubMenuHeader'
 
 export const Garden: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <SubMenuWrapper>
-      <SubMenuHeader onClick={() => setIsOpen(!isOpen)}>
-        Garden
-      </SubMenuHeader>
+      <SubMenuHeader 
+        title="Garden"
+        isOpen={isOpen}
+        onClick={() => setIsOpen(!isOpen)}
+      />
       {isOpen && (
         <SubMenuContent>
           <div>Сontent</div>

@@ -19,8 +19,22 @@ const pokemonSlise = createSlice({
     setPokemon(_, action: PayloadAction<PokemonState[]>) {
       return action.payload;
     },
+    setRenamePokemon(state, action: PayloadAction<{ oldName: string, newName: string }>) {
+      const oldName = action.payload.oldName;
+      const newName = action.payload.newName;
+      const upPokemon = state.map((pokemon) => {
+        if (pokemon.name === oldName) {
+          return {
+            ...pokemon,
+            name: newName
+          };
+        }
+        return pokemon;
+      });
+      return upPokemon;
+    },
   }
 })
 
-export const { addPokemon, removePokemon, clearPokemon, setPokemon } = pokemonSlise.actions;
+export const { addPokemon, removePokemon, clearPokemon, setPokemon, setRenamePokemon } = pokemonSlise.actions;
 export default pokemonSlise.reducer;

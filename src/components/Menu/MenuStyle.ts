@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const MenuWrapper = styled.div`
-  width: 728px;
+  width: 100%;
   top: 122px;
   padding: 16px 0;
   border-radius: 16px;
@@ -22,7 +22,7 @@ export const SubMenuWrapper = styled.div`
   cursor: pointer;
 `;
 
-export const SubMenuHeader = styled.div`
+export const SubMenuHeaderStyle = styled.div`
   -webkit-text-stroke: 2px var(--Secondary, rgba(54, 95, 172, 1));
   paint-order: stroke fill;
   font-family: Inter;
@@ -33,4 +33,8 @@ export const SubMenuHeader = styled.div`
   letter-spacing: 0%;
   color: var(--Primary, rgba(255, 204, 1, 1));
   height: 60px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
 `;
