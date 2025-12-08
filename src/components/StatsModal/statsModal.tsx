@@ -97,7 +97,6 @@ export const StatsModal = ({ pokemon, onButtonClick }: StatsModalProps) => {
                 <div>
                   <input
                     type="text"
-                    className="custom-input"
                     placeholder="Псевдоним покемона"
                     {...register("newName")}
                     disabled={isSubmitting}

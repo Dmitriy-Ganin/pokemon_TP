@@ -19,9 +19,22 @@ export const InventoryHeader = styled.div`
   line-height: 100%;
   letter-spacing: 0%;
   color: var(--Primary, rgba(255, 204, 1, 1));
-  height: 60px;
+  height: 25px;
 `;
 
 export const InventoryContent = styled.div`
-  padding: 10px;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 10px;
+  width: 288px;
+  height: 655px;
+`;
+
+export const Box = styled.div`  
+  width: 48px;
+  height: 48px;
+  background-color: rgba(239, 239, 239, 1);
 `;

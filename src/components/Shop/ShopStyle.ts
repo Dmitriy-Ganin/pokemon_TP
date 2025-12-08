@@ -20,11 +20,10 @@ export const ShopHeader = styled.div`
   line-height: 100%;
   letter-spacing: 0%;
   color: var(--Primary, rgba(255, 204, 1, 1));
-  height: 60px;
+  height: 25px;
 `;
 
 export const ShopContent = styled.div`
-  padding: 16px;
-  background-color: #f8f9fa;
-  border-radius: 0 0 7px 7px;
+  padding: 12px;
+  border-radius: 16px;
 `;
