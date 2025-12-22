@@ -8,6 +8,7 @@ import { clearLogin } from '../../store/slices/loginSlice';
 import { clearMoney } from '../../store/slices/moneySlice';
 import { clearPokemon } from '../../store/slices/pokemonSlice';
 import { clearFirstEntry } from '../../store/slices/firstEntrySlice';
+import { clearInventory } from '../../store/slices/inventorySlice';
 
 export const LogOut = () => {
 
@@ -26,6 +27,7 @@ export const LogOut = () => {
     dispatch(clearMoney());
     dispatch(clearPokemon());
     dispatch(clearFirstEntry());
+    dispatch(clearInventory());
 
     localStorage.removeItem('activeLogin');
 

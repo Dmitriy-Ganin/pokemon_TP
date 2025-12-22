@@ -4,6 +4,8 @@ import tokenReducer from './slices/tokenSlice';
 import moneyReducer from './slices/moneySlice';
 import firstEntryReducer from './slices/firstEntrySlice';
 import pokemonReducer from './slices/pokemonSlice';
+import inventoryReducer from './slices/inventorySlice';
+import { InventoryCardData } from '../components/InventoryCard';
 import { PokemonState } from '../API/baseAPI'
 
 import { authAPI } from '../API/authAPI';
@@ -14,7 +16,8 @@ const ACCOUNTS_KEY = 'accounts';
 interface UserData {
   login: string;
   money: number;
-  pokemon: PokemonState [];
+  pokemon: PokemonState[];
+  inventory: InventoryCardData[];
 }
 
 interface AccountsState {
@@ -30,7 +33,12 @@ export const loadState = (username?: string) => {
   }
   const allAccounts: AccountsState = JSON.parse(allAccountsJSON);
   if (username && allAccounts.accounts[username]) {
-    return allAccounts.accounts[username];
+    const userData = allAccounts.accounts[username];
+    return {
+      ...userData,
+      pokemon: userData.pokemon || [],
+      inventory: userData.inventory || [],
+    };
   }
   else return undefined;
 }
@@ -48,17 +56,17 @@ export const saveState = (state: RootState, username?: string) => {
     login: state.login,
     money: state.money,
     pokemon: state.pokemon,
+    inventory: state.inventory,
   };
 
   const newAccountsState: AccountsState = {
     accounts: {
       ...existingAccounts.accounts,
-      [username]: stateToSave 
+      [username]: stateToSave
     }
   }
   const serializedState = JSON.stringify(newAccountsState);
   localStorage.setItem(ACCOUNTS_KEY, serializedState);
-
 };
 
 export const saveStateToStorage = (state: RootState) => {
@@ -79,6 +87,7 @@ export const store = configureStore({
     money: moneyReducer,
     firstEntry: firstEntryReducer,
     pokemon: pokemonReducer,
+    inventory: inventoryReducer,
 
     [baseAPI.reducerPath]: baseAPI.reducer,
     [authAPI.reducerPath]: authAPI.reducer,

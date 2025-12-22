@@ -1,5 +1,54 @@
-export const ShopCard = ({ image, tittle, text, money }: { image: string, tittle: string, text: string, money: number }) => {
-  return <div style={{
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import { decrementMoney } from '../../store/slices/moneySlice';
+import { addItem } from '../../store/slices/inventorySlice';
+import { findFreePosition } from '../../utils/inventoryUtils';
+import { InventoryCardData } from '../InventoryCard';
+
+export const ShopCard = ({ 
+  image, 
+  title, 
+  text, 
+  price,
+  itemData
+}: { 
+  image: string, 
+  title: string, 
+  text: string, 
+  price: number,
+  itemData: Omit<InventoryCardData, 'position' | 'id'>
+}) => {
+  const dispatch = useDispatch();
+  const currentMoney = useSelector((state: RootState) => state.money);
+  const inventory = useSelector((state: RootState) => state.inventory); // <-- получаем инвентарь
+
+  const handleBuy = () => {
+    if (currentMoney >= price) {
+      // Генерируем ID
+      const id = `${itemData.type}-${Date.now()}`;
+      
+      // Ищем свободное место
+      const freePosition = findFreePosition(inventory, { ...itemData, id });
+      
+      if (freePosition !== null) {
+        // Добавляем предмет
+        dispatch(addItem({
+          ...itemData,
+          id,
+          position: freePosition
+        }));
+        
+        // оплата
+        dispatch(decrementMoney(price));
+      } else {
+        alert('Недостаточно места в инвентаре!');
+      }
+    } else {
+      alert('Недостаточно денег!');
+    }
+  };
+
+  return (<div style={{
     display: 'flex',
     width: '296px',
     height: '105px',
@@ -33,7 +82,7 @@ export const ShopCard = ({ image, tittle, text, money }: { image: string, tittle
         <div style = {{
           fontWeight: 700,
           fontSize: "16px",
-        }}>{tittle}</div>
+        }}>{title}</div>
         <div>{text}г</div>
       </div>
     </div>
@@ -43,7 +92,9 @@ export const ShopCard = ({ image, tittle, text, money }: { image: string, tittle
         height: '32px',
         backgroundColor: 'rgba(54, 95, 172, 1)',
         color: 'rgba(255, 255, 255, 1)',
-      }}>Купить за {money}</button>
+      }}
+      onClick={handleBuy}
+      >Купить за {price}</button>
     </div>
-  </div>
+  </div>)
 }

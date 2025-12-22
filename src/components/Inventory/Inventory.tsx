@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   InventoryWrapper,
   InventoryHeader,
@@ -6,90 +7,26 @@ import {
   Box,
 } from './InventoryStyle';
 import { InventoryCard, InventoryCardData } from '../InventoryCard';
-import PokeBall2 from '../ShopCard/ShopCardImage/PokeBall2.png';
-import Berry from '../ShopCard/ShopCardImage/Berry.png';
+import { RootState } from '../../store/store';
+import { updateItemPosition } from '../../store/slices/inventorySlice';
+import { getItemCells, canPlaceItem, GRID_COLUMNS, GRID_SIZE } from '../../utils/inventoryUtils';
 
 export const Inventory: React.FC = () => {
-  // Константы
-  const GRID_COLUMNS = 5;
-  const GRID_SIZE = 60;
+  // Подключаем Redux
+  const dispatch = useDispatch();
+  const items = useSelector((state: RootState) => state.inventory);
 
   // Состояния
-  const [items, setItems] = useState<InventoryCardData[]>([
-    {
-      id: 'pokeball-1',
-      type: 'pokeball',
-      position: 0,
-      imageUrl: PokeBall2,
-    },
-    {
-      id: 'potion-1',
-      type: 'potion',
-      position: 5,
-      width: 2,
-      height: 1,
-      imageUrl: Berry,
-    },
-    {
-      id: 'big-item',
-      type: 'big',
-      position: 20,
-      width: 2,
-      height: 2,
-      imageUrl: PokeBall2,
-    },
-  ]);
-
+  //id перетаскиваемого предмета
   const [draggedItemId, setDraggedItemId] = useState<string | null>(null);
+  //посвечивакющиеся ячейки
   const [highlightedCells, setHighlightedCells] = useState<number[]>([]);
+  //позиция для сброса, с учетом центрирования
   const [dropTargetCell, setDropTargetCell] = useState<number | null>(null);
 
-  // Получить все клетки предмета
-  const getItemCells = (item: InventoryCardData, startPosition: number): number[] => {
-    const itemWidth = item.width || 1;
-    const itemHeight = item.height || 1;
-    const cells: number[] = [];
-
-    const startRow = Math.floor(startPosition / GRID_COLUMNS);
-    const startCol = startPosition % GRID_COLUMNS;
-
-    // Проверка границ
-    if (startCol + itemWidth > GRID_COLUMNS) return [];
-    if (startRow + itemHeight > GRID_SIZE / GRID_COLUMNS) return [];
-
-    // Вычисляем занимаемые клетки
-    for (let row = 0; row < itemHeight; row++) {
-      for (let col = 0; col < itemWidth; col++) {
-        const cellIndex = (startRow + row) * GRID_COLUMNS + (startCol + col);
-        if (cellIndex < GRID_SIZE) {
-          cells.push(cellIndex);
-        }
-      }
-    }
-
-    return cells;
-  };
-
-  // Можно ли разместить предмет
-  const canPlaceItem = (item: InventoryCardData, targetPosition: number): boolean => {
-    const cells = getItemCells(item, targetPosition);
-    const expectedCount = (item.width || 1) * (item.height || 1);
-
-    if (cells.length !== expectedCount) return false;
-
-    for (const cell of cells) {
-      // Проверяем, не занята ли клетка
-      for (const otherItem of items) {
-        if (otherItem.id === item.id) continue;
-
-        const otherCells = getItemCells(otherItem, otherItem.position);
-        if (otherCells.includes(cell)) {
-          return false;
-        }
-      }
-    }
-
-    return true;
+  // проверка можно ли разместить тут предмет
+  const canPlaceItemLocal = (item: InventoryCardData, targetPosition: number): boolean => {
+    return canPlaceItem(item, targetPosition, items);
   };
 
   // Обработчик: начало перетаскивания
@@ -98,15 +35,14 @@ export const Inventory: React.FC = () => {
     setDraggedItemId(itemId);
   };
 
-  // Обработчик: конец перетаскивания
+  // Обработчик: конец перетаскивания, сбрасывает состояния
   const handleDragEnd = () => {
     setDraggedItemId(null);
     setHighlightedCells([]);
     setDropTargetCell(null);
   };
 
-
-  // Обработчик: сброс предмета на конкретную клетку
+  // обрабока сброса предмета на конкретную клетку
   const handleDrop = (e: React.DragEvent<HTMLDivElement>, cellIndex: number) => {
     e.preventDefault();
 
@@ -114,44 +50,30 @@ export const Inventory: React.FC = () => {
     const item = items.find(i => i.id === itemId);
 
     if (item) {
-      //Нормальный расчет центра, а не вот это вот все
       const itemWidth = item.width || 1;
       const itemHeight = item.height || 1;
       const offset = Math.floor(itemWidth / 4) + Math.floor(itemHeight / 4) * GRID_COLUMNS;
 
       const adjustedIndex = cellIndex - offset;
 
-      // Проверяем границы и возможность размещения
+      // проверка границы и возможности размещения
       if (
         adjustedIndex >= 0 &&
         adjustedIndex < GRID_SIZE &&
-        canPlaceItem(item, adjustedIndex)
+        canPlaceItemLocal(item, adjustedIndex)
       ) {
-        setItems(prev => prev.map(i =>
-          i.id === itemId ? { ...i, position: adjustedIndex } : i
-        ));
+        // смена позиции
+        dispatch(updateItemPosition({
+          id: itemId,
+          position: adjustedIndex
+        }));
       }
     }
 
     handleDragEnd();
   };
 
-  // Функция: получить предмет в клетке
-  const getItemInCell = (cellIndex: number): InventoryCardData | undefined => {
-    // Ищем предмет, который занимает эту клетку
-    for (const item of items) {
-      const itemCells = getItemCells(item, item.position);
-      if (itemCells.includes(cellIndex)) {
-        // Возвращаем предмет только если это его стартовая позиция
-        if (item.position === cellIndex) {
-          return item;
-        }
-      }
-    }
-    return undefined;
-  };
-
-  // Функция: обработка drag over для конкретной клетки
+  // обработка перемещения предмета над ячейкой (подсветка)
   const handleCellDragOver = (e: React.DragEvent<HTMLDivElement>, cellIndex: number) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
@@ -159,7 +81,6 @@ export const Inventory: React.FC = () => {
     const draggedItem = draggedItemId ? items.find(i => i.id === draggedItemId) : null;
 
     if (draggedItem) {
-
       const itemWidth = draggedItem.width || 1;
       const itemHeight = draggedItem.height || 1;
       const offset = Math.floor(itemWidth / 4) + Math.floor(itemHeight / 4) * GRID_COLUMNS;
@@ -178,6 +99,21 @@ export const Inventory: React.FC = () => {
     }
   };
 
+  // находит предмет в клетке
+  const getItemInCell = (cellIndex: number): InventoryCardData | undefined => {
+    // Ищем предмет, который занимает эту клетку
+    for (const item of items) {
+      const itemCells = getItemCells(item, item.position);
+      if (itemCells.includes(cellIndex)) {
+        // Возвращаем предмет только если это его стартовая позиция
+        if (item.position === cellIndex) {
+          return item;
+        }
+      }
+    }
+    return undefined;
+  };
+
   // Создаем массив ячеек
   const boxes = [];
 
@@ -189,7 +125,7 @@ export const Inventory: React.FC = () => {
     // Проверяем возможность размещения
     let canDropHere = false;
     if (draggedItem && dropTargetCell !== null && isHighlighted) {
-      canDropHere = canPlaceItem(draggedItem, dropTargetCell);
+      canDropHere = canPlaceItemLocal(draggedItem, dropTargetCell);
     }
 
     boxes.push(
